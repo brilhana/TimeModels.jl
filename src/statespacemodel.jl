@@ -210,14 +210,14 @@ end #ParametrizedSSM
 ParametrizedSSM(A2::ParametrizedMatrix{T}, Q::ParametrizedMatrix{T},
                        C2::ParametrizedMatrix{T}, R::ParametrizedMatrix{T},
                        x1::ParametrizedMatrix{T}, S::ParametrizedMatrix{T};
-                       A1::Function=_->speye(size(A2,1)), A3::Function=_->speye(size(A2,2)),
-                       B1::Function=_->speye(size(x1,1)),
+                       A1::Function=_->sparse(size(A2,1)), A3::Function=_->sparse(size(A2,2)),
+                       B1::Function=_->sparse(size(x1,1)),
                        B2::ParametrizedMatrix{T}=parametrize_none(spzeros(size(B1(1),2), 1)),
-                       G::Function=_->speye(size(x1,1)),
-                       C1::Function=_->speye(size(C2, 1)), C3::Function=_->speye(size(C2,2)),
-                       D1::Function=_->speye(size(C1(1),1)),
+                       G::Function=_->sparse(size(x1,1)),
+                       C1::Function=_->sparse(size(C2, 1)), C3::Function=_->sparse(size(C2,2)),
+                       D1::Function=_->sparse(size(C1(1),1)),
                        D2::ParametrizedMatrix{T}=parametrize_none(spzeros(size(C1(1),1), 1)),
-                       H::Function=_->speye(size(C1(1),1)), J::AbstractMatrix=speye(size(x1, 1))) where {T} =
+                       H::Function=_->sparse(size(C1(1),1)), J::AbstractMatrix=sparse(size(x1, 1))) where {T} =
           ParametrizedSSM{T}(A1, A2, A3, B1, B2, G, Q, C1, C2, C3, D1, D2, H, R, x1, J, S)
 
 # State space model parameters
@@ -239,9 +239,9 @@ struct SSMParameters{T}
 
 end #SSMParameters
 
-SSMParameters(__::T; A::Vector{T}=T[], B::Vector{T}=T[], Q::Vector{T}=T[],
-               C::Vector{T}=T[], D::Vector{T}=T[], R::Vector{T}=T[],
-               x1::Vector{T}=T[], S::Vector{T}=T[]) where {T} =
+SSMParameters(::Any; A::Vector{T}=T[], B::Vector{T}=T[], Q::Vector{T}=T[],
+              C::Vector{T}=T[], D::Vector{T}=T[], R::Vector{T}=T[],
+              x1::Vector{T}=T[], S::Vector{T}=T[]) where {T} =
               SSMParameters{T}(A, B, Q, C, D, R, x1, S)
 
 function (m::ParametrizedSSM{T})(p::SSMParameters{T}) where {T}

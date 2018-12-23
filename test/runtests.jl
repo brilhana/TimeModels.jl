@@ -2,6 +2,7 @@
 
 using Compat.Test
 using TimeModels
+using Test
 
 include("kalman_filter.jl")
 include("parameter_estimation.jl")

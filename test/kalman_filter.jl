@@ -1,3 +1,7 @@
+using LinearAlgebra
+using SparseArrays
+using Random
+
 #= using UnicodePlots =#
 
 # Set up model
@@ -24,7 +28,7 @@ end
 
 @testset "Kalman Filter" begin
 
-    srand(1)
+    Random.seed!(1)
 
     @testset "Time invariant models" begin
 
@@ -120,7 +124,7 @@ end
         end
 
         @testset "Simulations" begin
-            srand(1)
+            Random.seed!(1)
             fs = 256
             mod2 = sinusoid_model(4, fs = 256)
             x, y = TimeModels.simulate(mod2, fs*2)
@@ -129,7 +133,7 @@ end
         end
 
         @testset "Filtering" begin
-            srand(1)
+            Random.seed!(1)
             fs = 256
             mod2 = sinusoid_model(4, fs = 256)
             x, y = TimeModels.simulate(mod2, fs*2)
@@ -161,7 +165,7 @@ end
         end
 
         @testset "Smoothing" begin
-            srand(1)
+            Random.seed!(1)
             fs = 256
             mod2 = sinusoid_model(4, fs = 8192)
             x, y = TimeModels.simulate(mod2, fs*10)
@@ -181,7 +185,7 @@ end
             coeffs = randn(m)
             y = x * coeffs + s*randn(n)
 
-            I_m   = speye(m)
+            I_m   = sparse(I,m,m)
             I0_m  = spzeros(m,m)
             S     = diagm(s)
             mlm   = StateSpaceModel(
@@ -190,7 +194,7 @@ end
                 t->x[t:t,:], # C
                 _->S, # W
                 zeros(m), # x1
-                speye(m) # P1
+                sparse(I,m,m) # P1
             )
             mlm_smooth = kalman_smooth(y, mlm)
             @test ones(n,m) .* mlm_smooth.smoothed[1:1,:] ≈ mlm_smooth.smoothed atol=1e-12

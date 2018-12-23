@@ -23,13 +23,13 @@ function fit(y::Array{T}, pmodel::ParametrizedSSM, params::SSMParameters;
     u_orig = copy(u)
     u = u'
 
-    I_nx = speye(pmodel.nx)
+    I_nx = sparse(pmodel.nx)
     I0_nx = zeros(I_nx)
 
-    I_ny = speye(pmodel.ny)
+    I_ny = sparse(pmodel.ny)
     I0_ny = zeros(I_ny)
 
-    I_nu = speye(pmodel.nu)
+    I_nu = sparse(pmodel.nu)
 
     # Requirement: zeros-rows in G and H remain consistent
     x_deterministic       = all(pmodel.G(1) .== 0, 2)
